@@ -1,5 +1,5 @@
-#ifndef PERIPHERAL_BASE_H
-#define PERIPHERAL_BASE_H
+#ifndef BASE_H
+#define BASE_H
 
 #include <cstdint>
 #include <cstdio>
@@ -32,7 +32,7 @@ public:
   volatile uint32_t *const &address() const {return address_p;}
 };
 
-void *Peripheral::mapmem(uint32_t base_address) const {
+inline void *Peripheral::mapmem(uint32_t base_address) const {
   int memfd;
   if ((memfd = open("/dev/mem", O_RDWR|O_SYNC)) < 0) {
     perror("Failed to open /dev/mem, try using sudo");
@@ -47,11 +47,11 @@ void *Peripheral::mapmem(uint32_t base_address) const {
   return map;
 }
 
-void Peripheral::unmapmem(void* map) const {
+inline void Peripheral::unmapmem(void* map) const {
   munmap(map, BLOCK_SIZE);
 }
 
-Peripheral::Peripheral(uint32_t base_address): address_p(nullptr) {
+inline Peripheral::Peripheral(uint32_t base_address): address_p(nullptr) {
   // Map the registers into memory
   void *map = mapmem(base_address);
   if (map == MAP_FAILED) {
@@ -61,7 +61,7 @@ Peripheral::Peripheral(uint32_t base_address): address_p(nullptr) {
   address_p = static_cast<volatile uint32_t *>(map);
 }
 
-Peripheral::~Peripheral() {
+inline Peripheral::~Peripheral() {
   unmapmem(static_cast<void *>(const_cast<uint32_t *>(address_p)));
 }
 

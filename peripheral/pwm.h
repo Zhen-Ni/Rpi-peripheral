@@ -1,7 +1,7 @@
-#ifndef PWM_H
-#define PWM_H
+#ifndef RPI_PWM_H
+#define RPI_PWM_H
 
-#include "peripheral_base.h"
+#include "base.h"
 
 // Address of the PWM registers
 #define BCM_PWM_BASE BCM_PERIPHERAL_BASE + 0x20C000
@@ -48,7 +48,7 @@ public:
   volatile uint32_t &DAT(unsigned int n) const {return ACCESS(4*n+5);}
 };
 
-const PWM_channel &PWM_channel::control
+inline const PWM_channel &PWM_channel::control
 (bool enable=true, bool markspace=false) const {
   uint32_t reg = pwm_p->CTL();
   if (enable) {
@@ -68,18 +68,18 @@ const PWM_channel &PWM_channel::control
   return *this;
 }
 
-const PWM_channel &PWM_channel::range(uint32_t range_) const {
+inline const PWM_channel &PWM_channel::range(uint32_t range_) const {
   pwm_p->RNG(channel_number) = range_;
   return *this;
 }
 
-const PWM_channel &PWM_channel::data(uint32_t data_) const {
+inline const PWM_channel &PWM_channel::data(uint32_t data_) const {
   pwm_p->DAT(channel_number) = data_;
   return *this;
 }
 
 
-PWM::PWM(): Peripheral(BCM_PWM_BASE), channel(channel_array) {
+inline PWM::PWM(): Peripheral(BCM_PWM_BASE), channel(channel_array) {
   for (size_t i = 0; i != BCM_PWM_COUNT; ++i) {
     channel_array[i].init(this, i);
   }

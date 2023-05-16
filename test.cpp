@@ -1,9 +1,6 @@
 #include <iostream>
 #include <thread>
-#include "gpio.h"
-#include "pwm.h"
-#include "clock.h"
-#include "timer.h"
+#include "peripheral/peripheral.h"
 
 using namespace std;
 

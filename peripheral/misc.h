@@ -1,5 +1,5 @@
-#ifndef MISC_H
-#define MISC_H
+#ifndef RPI_MISC_H
+#define RPI_MISC_H
 
 
 // Loop unrolling

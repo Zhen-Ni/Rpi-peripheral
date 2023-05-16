@@ -1,7 +1,7 @@
-#ifndef TIMER_H
-#define TIMER_H
+#ifndef RPI_TIMER_H
+#define RPI_TIMER_H
 
-#include "peripheral_base.h"
+#include "base.h"
 
 // Address of the Timer registers
 #define BCM_TIMER_BASE BCM_PERIPHERAL_BASE + 0x003000
@@ -69,7 +69,7 @@ inline const Timer_channel &Timer_channel::compare(uint32_t value)
 }
 
 
-Timer::Timer(): Peripheral(BCM_TIMER_BASE), channel(channel_array) {
+inline Timer::Timer(): Peripheral(BCM_TIMER_BASE), channel(channel_array) {
   for (size_t i = 0; i != BCM_TIMER_COUNT; ++i) {
     channel_array[i].init(this, i);
   }

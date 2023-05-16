@@ -1,7 +1,7 @@
-#ifndef GPIO_H
-#define GPIO_H
+#ifndef RPI_GPIO_H
+#define RPI_GPIO_H
 
-#include "peripheral_base.h"
+#include "base.h"
 #include "misc.h"
 
 // Address of the GPIO registers
@@ -63,8 +63,8 @@ public:
 
   // Pull-up/down
   // It seems that we can't pull down GPIO pin 2 and pin 3
-  template<typename T>
-  void pull_up_down(PUD_STATUS status, const T &ports) const;
+  template <typename T>
+  void pull_up_down(PUD_STATUS status, const T& ports) const;
   
 };
 
@@ -118,23 +118,22 @@ inline const bool GPIO_pin::level() const {
   return gpio_p->GPLEV(pin_number/32) &= (1<<pin_number%32);
 }
 
-const GPIO_pin &GPIO_pin::pud_clock(bool sel) const {
+inline const GPIO_pin &GPIO_pin::pud_clock(bool sel) const {
   volatile uint32_t &reg = gpio_p->GPPUDCLK(pin_number/32);
   sel ? reg |= (1<<pin_number) : reg &= ~(1<<pin_number);
   return *this;
 }
 
 
-GPIO::GPIO(): Peripheral(BCM_GPIO_BASE), pin(pin_array) {
+inline GPIO::GPIO(): Peripheral(BCM_GPIO_BASE), pin(pin_array) {
   // set up pins
   for (size_t i = 0; i != BCM_GPIO_COUNT; ++i) {
     pin_array[i].init(this, i);
   }
 }
 
-
 template <typename T>
-void GPIO::pull_up_down(PUD_STATUS status, const T &ports) const {
+inline void GPIO::pull_up_down(PUD_STATUS status, const T &ports) const {
   // Set the required control signal
   GPPUD() = status;
   // Wait 150 cycles

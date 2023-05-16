@@ -1,7 +1,7 @@
-#ifndef CLOCK_H
-#define CLOCK_H
+#ifndef RPI_CLOCK_H
+#define RPI_CLOCK_H
 
-#include "peripheral_base.h"
+#include "base.h"
 
 // Address of the Clock registers
 #define BCM_CLOCK_BASE BCM_PERIPHERAL_BASE + 0x101000
@@ -62,7 +62,7 @@ inline bool Clock_manager::busy() const {
   return clock_p->GPCTL(clock_name) & (1<<7);
 }
 
-const Clock_manager &Clock_manager::control
+inline const Clock_manager &Clock_manager::control
 (CLOCK_SOURCE source=OSCILLATOR, bool enable=true, MASH_FILTER mash=MASH0) const {
   uint32_t reg = (source & 0xF) | (enable<<4) |
     (mash<<9) | (PASSWD<<24);
@@ -70,7 +70,7 @@ const Clock_manager &Clock_manager::control
   return *this;
 }
 
-const Clock_manager &Clock_manager::divisor
+inline const Clock_manager &Clock_manager::divisor
 (unsigned short divi=1, unsigned short divf=0) const {
   divi &= 0xFFF;
   divf &= 0xFFF;
@@ -80,7 +80,7 @@ const Clock_manager &Clock_manager::divisor
 }
 
 
-Clock::Clock(): Peripheral(BCM_CLOCK_BASE), manager(manager_array) {
+inline Clock::Clock(): Peripheral(BCM_CLOCK_BASE), manager(manager_array) {
   for (size_t i = 0; i != BCM_CLOCK_COUNT; ++i) {
     manager_array[i].init(this, static_cast<CLOCK_NAME>(i));
   }
